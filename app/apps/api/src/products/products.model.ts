@@ -1,0 +1,36 @@
+import { prop } from '@typegoose/typegoose';
+import { Base, TimeStamps } from '@typegoose/typegoose/lib/defaultClasses';
+
+export interface ProductsModel extends Base {}
+
+export class ProductsModel extends TimeStamps {
+  @prop({ unique: true })
+  key: string;
+
+  @prop()
+  name: string;
+
+  @prop()
+  amount: number;
+
+  @prop()
+  price: string;
+
+  @prop()
+  description: string;
+
+  @prop()
+  sizes: string[];
+
+  @prop()
+  gender: string;
+
+  @prop()
+  category: string;
+
+  @prop()
+  producer: string;
+
+  @prop()
+  img: string;
+}
