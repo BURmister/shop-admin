@@ -59,7 +59,7 @@ export class AuthService {
       name: string,
    ): Promise<{ access_token: string }> {
       const payload = {
-         sub: _id,
+         _id: _id,
          name,
       };
       const secret = this.config.get('JWT_SECRET');

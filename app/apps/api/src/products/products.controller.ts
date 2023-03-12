@@ -18,7 +18,7 @@ import { Auth } from '../auth/guard/jwt.guard';
 import { ProductsDto } from './products.dto';
 import { ProductsService } from './products.service';
 
-@Auth()
+// TODO @Auth()
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
@@ -34,21 +34,18 @@ export class ProductsController {
   }
 
   @Post('/add')
-  addOne( @Body() dto: ProductsDto) {
+  addOne(@Body() dto: ProductsDto) {
     return this.productsService.addOne(dto);
   }
 
   @Put('/edit/:_id')
   @HttpCode(200)
-  edit(
-    @Param('_id') _id: Types.ObjectId,
-    @Body() dto: ProductsDto,
-  ) {
+  edit(@Param('_id') _id: Types.ObjectId, @Body() dto: ProductsDto) {
     return this.productsService.editOne(_id, dto);
   }
 
   @Put('/delete/:_id')
-  delete( @Param('_id') _id: Types.ObjectId) {
+  delete(@Param('_id') _id: Types.ObjectId) {
     return this.productsService.deleteOne(_id);
   }
 }

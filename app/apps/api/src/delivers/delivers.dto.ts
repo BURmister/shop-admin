@@ -3,15 +3,15 @@ import { IsOptional, IsString } from 'class-validator';
 export class DeliversDto {
   @IsString()
   @IsOptional()
-  key: string;
+  deliveryKey: string;
 
   @IsString()
   @IsOptional()
-  name: string;
+  deliveryName: string;
 
   @IsString()
   @IsOptional()
-  description?: string;
+  deliveryDescription?: string;
 
   @IsString()
   @IsOptional()
@@ -27,15 +27,13 @@ export class DeliversDto {
 
   @IsOptional()
   products: {
-    productKey: string;
+    key: string;
 
-    productName: string;
-
-    amount: number;
+    name: string;
 
     price: string;
 
-    productDescription: string;
+    description: string;
 
     gender: string;
 
@@ -43,7 +41,9 @@ export class DeliversDto {
 
     producer: string;
 
-    sizes: string[];
+    size: string;
+
+    amount: number;
 
     img: string;
   }[];

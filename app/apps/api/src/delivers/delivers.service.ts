@@ -36,36 +36,40 @@ export class DeliversService {
   async addOne(dto: DeliversDto) {
     const newProduct = new this.DeliversModel(dto);
     const deliver = await newProduct.save();
-    return deliver.name;
+    return deliver.deliveryName;
   }
 
   async editOne(_id: Types.ObjectId, dto: DeliversDto) {
     const deliver = await this.getById(_id);
 
-    if (dto.key) {
-      deliver.key = dto.key;
+    if (dto.deliveryKey) {
+      deliver.deliveryKey = dto.deliveryKey;
     }
 
-    if (dto.name) {
-      deliver.name = dto.name;
+    if (dto.deliveryName) {
+      deliver.deliveryName = dto.deliveryName;
     }
 
-    if (dto.description) {
-      deliver.description = dto.description;
+    if (dto.deliveryDescription) {
+      deliver.deliveryDescription = dto.deliveryDescription;
     }
 
     if (dto.from) {
       deliver.from = dto.from;
     }
 
+    if (dto.products) {
+      deliver.products = dto.products
+    }
+
     await deliver.save();
-    return deliver.name;
+    return deliver.deliveryName;
   }
 
   async deleteOne(_id: Types.ObjectId) {
     const deliver = await this.getById(_id);
     await deliver.deleteOne();
-    return deliver.name;
+    return deliver.deliveryName;
   }
 
   async completeOne(_id: Types.ObjectId) {
@@ -78,6 +82,6 @@ export class DeliversService {
     });
 
     await deliver.deleteOne();
-    return deliver.name;
+    return deliver.deliveryName;
   }
 }

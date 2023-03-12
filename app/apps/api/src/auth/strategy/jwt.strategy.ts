@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       });
    }
 
-   async validate(payload: { sub: string; name: string }) {
-      return this.UserModel.findById(payload.sub, {hash: 0}).exec();
+   async validate(payload: { _id: string; name: string }) {
+      return this.UserModel.findById(payload._id, {hash: 0}).exec();
    }
 }

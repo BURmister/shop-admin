@@ -1,0 +1,31 @@
+.wrapper {
+   position: relative;
+   padding: 0% 2%;
+   height: 80px;
+
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   background-color: rgb(57, 86, 115);
+   color: rgb(240, 240, 240);
+
+   button {
+      position: absolute;
+      left: 92%;
+
+      padding: 13px 20px;
+
+      border: 2px solid rgb(57, 86, 115);
+      background-color: inherit;
+      color: rgb(240, 240, 240);
+      font-size: 17px;
+
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      
+      &:hover {
+         border: 2px solid rgb(240, 240, 240);
+      }
+   }
+}

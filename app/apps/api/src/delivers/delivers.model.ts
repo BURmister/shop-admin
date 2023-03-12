@@ -5,13 +5,13 @@ export interface DeliversModel extends Base {}
 
 export class DeliversModel extends TimeStamps {
   @prop({ unique: true })
-  key: string;
+  deliveryKey: string;
 
   @prop()
-  name: string;
+  deliveryName: string;
 
   @prop()
-  description?: string;
+  deliveryDescription?: string;
 
   @prop()
   from: string;
@@ -24,15 +24,13 @@ export class DeliversModel extends TimeStamps {
 
   @prop()
   products: {
-    productKey: string;
+    key: string;
 
-    productName: string;
-
-    amount: number;
+    name: string;
 
     price: string;
 
-    productDescription: string;
+    description: string;
 
     gender: string;
 
@@ -40,7 +38,9 @@ export class DeliversModel extends TimeStamps {
 
     producer: string;
 
-    sizes: string[];
+    size: string;
+
+    amount: number;
 
     img: string;
   }[];

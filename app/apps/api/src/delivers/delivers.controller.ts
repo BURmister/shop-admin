@@ -18,7 +18,7 @@ import { Auth } from '../auth/guard/jwt.guard';
 import { DeliversDto } from './delivers.dto';
 import { DeliversService } from './delivers.service';
 
-@Auth()
+// TODO @Auth()
 @Controller('delivers')
 export class DeliversController {
   constructor(private deliversService: DeliversService) {}
@@ -52,7 +52,7 @@ export class DeliversController {
     return this.deliversService.deleteOne(_id);
   }
 
-  @Put('/delete/:_id')
+  @Put('/complete/:_id')   
   complete( @Param('_id') _id: Types.ObjectId) {
     return this.deliversService.completeOne(_id);
   }

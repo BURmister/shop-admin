@@ -24,8 +24,4 @@ export class UserDto {
    @IsString()
    @IsOptional()
    description?: string;
-
-   @IsString()
-   @IsOptional()
-   avatarPath?: string;
 }

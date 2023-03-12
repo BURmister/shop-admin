@@ -60,20 +60,24 @@ export class ProductsService {
       product.price = dto.price;
     }
 
-    if (dto.amount) {
-      product.amount = dto.amount;
-    }
     if (dto.gender) {
       product.gender = dto.gender;
     }
+
     if (dto.category) {
       product.category = dto.category;
     }
+
     if (dto.producer) {
       product.producer = dto.producer;
     }
-    if (dto.sizes) {
-      product.sizes = dto.sizes;
+
+    if (dto.size) {
+      product.size = dto.size;
+    }
+
+    if (dto.amount) {
+      product.amount = dto.amount;
     }
 
     await product.save();

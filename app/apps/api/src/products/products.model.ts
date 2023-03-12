@@ -11,6 +11,9 @@ export class ProductsModel extends TimeStamps {
   name: string;
 
   @prop()
+  size: string;
+
+  @prop()
   amount: number;
 
   @prop()
@@ -18,9 +21,6 @@ export class ProductsModel extends TimeStamps {
 
   @prop()
   description: string;
-
-  @prop()
-  sizes: string[];
 
   @prop()
   gender: string;

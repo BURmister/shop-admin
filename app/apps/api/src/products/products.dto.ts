@@ -11,10 +11,6 @@ export class ProductsDto {
 
   @IsString()
   @IsOptional()
-  amount: number;
-
-  @IsString()
-  @IsOptional()
   price: string;
 
   @IsString()
@@ -33,9 +29,12 @@ export class ProductsDto {
   @IsOptional()
   producer: string;
 
+  @IsOptional()
+  amount: number;
+
   @IsString()
   @IsOptional()
-  sizes: string[];
+  size: string;
 
   @IsString()
   @IsOptional()

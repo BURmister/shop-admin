@@ -21,7 +21,4 @@ export class UserModel extends TimeStamps {
 
    @prop()
    description?: string;
-
-   @prop()
-   avatarPath?: string;
 }
