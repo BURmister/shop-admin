@@ -37,6 +37,10 @@ const DeliversEdit: FC = () => {
          </nav>
          <form className={styles.table}>
             <span>
+               <h3>Код доставки</h3>
+               <p>{delivery._id}</p>
+            </span>
+            <span>
                <label htmlFor="name">Название</label>
                <input id="name" type="text" placeholder="Название" value={delivery.deliveryName} />
             </span>

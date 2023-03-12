@@ -37,16 +37,20 @@ const UsersEdit: FC = () => {
          </nav>
          <form className={styles.table}>
             <span>
+               <h3>Код сотрудника</h3>
+               <p>{user._id}</p>
+            </span>
+            <span>
                <label htmlFor="firstName">Имя</label>
-               <input id="firstName" type="text" placeholder="Имя" value={user.firstName}/>
+               <input id="firstName" type="text" placeholder="Имя" value={user.firstName} />
             </span>
             <span>
                <label htmlFor="secondName">Фамилия</label>
-               <input id="secondName" type="text" placeholder="Фамилия" value={user.secondName}/>
+               <input id="secondName" type="text" placeholder="Фамилия" value={user.secondName} />
             </span>
             <span>
                <label htmlFor="role">Должность</label>
-               <input id="role" type="text" placeholder="Должность" value={user.role}/>
+               <input id="role" type="text" placeholder="Должность" value={user.role} />
             </span>
             <button type="button">Применить изменения</button>
          </form>

@@ -38,6 +38,10 @@ const ProductsEdit: FC = () => {
          </nav>
          <form className={styles.table}>
             <span>
+               <h3>Артикул</h3>
+               <p>{product._id}</p>
+            </span>
+            <span>
                <label htmlFor="name">Название</label>
                <input id="name" type="text" placeholder="Название" value={product.name} />
             </span>
@@ -49,11 +53,11 @@ const ProductsEdit: FC = () => {
                <h3>Пол</h3>
                <span>
                   <div>
-                     <input name="gender" type="radio" id="male" value="Мужской" checked={product.gender.toLowerCase() === 'мужской' ? true : false} />
+                     <input name="gender" type="radio" id="male" value="Мужской" />
                      <label htmlFor="male">Мужской</label>
                   </div>
                   <div>
-                     <input name="gender" type="radio" id="female" value="Женский" checked={product.gender.toLowerCase() === 'женский' ? true : false} />
+                     <input name="gender" type="radio" id="female" value="Женский" />
                      <label htmlFor="female">Женский</label>
                   </div>
                </span>
