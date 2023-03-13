@@ -2,7 +2,8 @@ import { FC, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
-import { fetchProducts, getProducts } from '../../../redux/slices/products/products.slice';
+import { fetchProducts, filterProducts, getProducts } from '../../../redux/slices/products/products.slice';
+import { deleteOneProduct, deleteStatus } from '../../../redux/slices/products/deleteProduct.slice';
 
 import styles from './Products.module.scss';
 import back from '../../../assets/back.svg';
@@ -13,6 +14,7 @@ import minus from '../../../assets/minus.svg';
 
 const Products: FC = () => {
    const products = useAppSelector(getProducts);
+   const statusDelete = useAppSelector(deleteStatus);
    const dispatch = useAppDispatch();
 
    useEffect(() => {
@@ -20,6 +22,39 @@ const Products: FC = () => {
       document.title = 'Товары';
       dispatch(fetchProducts());
    }, []);
+
+   const onDelete = (_id: string) => {
+      if (confirm('Вы уверены, что хотите удалить товар?')) {
+         dispatch(deleteOneProduct({ id: _id, token: '' }));
+         dispatch(filterProducts(_id));
+         if (statusDelete === 'success') {
+            alert('Товар успешно удален');
+         } else if (statusDelete === 'error') {
+            alert('Ошибка удаления товара');
+         }
+      }
+   };
+
+   if (products.length === 0) {
+      return (
+         <div className={styles.wrapper}>
+            <div className={styles.wrapper}>
+               <nav>
+                  <Link className="back" to="/" aria-label="назад на главную">
+                     <img src={back} />
+                     Назад
+                  </Link>
+                  <Link className="new product" to="/products/add" aria-label="добавить новый товар">
+                     Создать
+                     <img src={shirt} />
+                  </Link>
+               </nav>
+               <div className={styles.table}></div>
+               <h1>на складе нет товаров</h1>
+            </div>
+         </div>
+      );
+   }
 
    return (
       <div className={styles.wrapper}>
@@ -78,7 +113,7 @@ const Products: FC = () => {
                      <Link className={styles.edit} to={`/products/edit/${item._id}`} title="изменить товар">
                         <img src={edit} />
                      </Link>
-                     <button className={styles.delete} type="button" title="удалить все количество">
+                     <button className={styles.delete} type="button" title="удалить все количество" onClick={() => onDelete(item._id)}>
                         <img src={deleteIcon} />
                      </button>
                   </span>

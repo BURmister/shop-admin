@@ -75,3 +75,7 @@ nav {
 /* a:focus-visible, button:focus-visible, input:focus-visible, button:focus-visible {
    outline-color: rgb(221, 47, 47);
 } */
+
+textarea {
+   font-family:  "Source Sans Pro", Helvetica, Arial, sans-serif;
+}

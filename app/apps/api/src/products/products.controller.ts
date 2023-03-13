@@ -48,4 +48,14 @@ export class ProductsController {
   delete(@Param('_id') _id: Types.ObjectId) {
     return this.productsService.deleteOne(_id);
   }
+
+  @Put('/minus/:_id')
+  minus(@Param('_id') _id: Types.ObjectId) {
+    return this.productsService.minus(_id);
+  }
+
+  @Put('/plus/:_id')
+  plus(@Param('_id') _id: Types.ObjectId) {
+    return this.productsService.plus(_id);
+  }
 }

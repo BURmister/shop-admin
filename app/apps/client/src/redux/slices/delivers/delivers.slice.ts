@@ -25,6 +25,9 @@ export const deliversSlice = createSlice({
       updateStatus: (state, action: PayloadAction<'loading' | 'success' | 'error'>) => {
          state.status = action.payload;
       },
+      filterDelivers: (state, action: PayloadAction<string>) => {
+         state.delivers = state.delivers.filter((delivery) => delivery._id !== action.payload);
+      },
    },
    extraReducers: (builder) => {
       builder.addCase(fetchDelivers.pending, (state) => {
@@ -47,5 +50,6 @@ export const getDelivers = (state: RootState) => state.delivers.delivers;
 export const deliversStatus = (state: RootState) => state.delivers.status;
 
 export const { updateStatus } = deliversSlice.actions;
+export const { filterDelivers } = deliversSlice.actions;
 
 export default deliversSlice.reducer;

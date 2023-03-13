@@ -25,6 +25,9 @@ export const usersSlice = createSlice({
       updateStatus: (state, action: PayloadAction<'loading' | 'success' | 'error'>) => {
          state.status = action.payload;
       },
+      filterUsers: (state, action: PayloadAction<string>) => {
+         state.users = state.users.filter((user) => user._id !== action.payload);
+      },
    },
    extraReducers: (builder) => {
       builder.addCase(fetchUsers.pending, (state) => {
@@ -47,5 +50,6 @@ export const getUsers = (state: RootState) => state.users.users;
 export const usersStatus = (state: RootState) => state.users.status;
 
 export const { updateStatus } = usersSlice.actions;
+export const { filterUsers } = usersSlice.actions;
 
 export default usersSlice.reducer;
