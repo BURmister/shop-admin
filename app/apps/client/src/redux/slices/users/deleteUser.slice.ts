@@ -2,33 +2,33 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { RootState } from '../../store';
 
-type deleteProduct = {
+type deleteUser = {
    id: string;
    token: string;
 };
 
-export const deleteOneProduct = createAsyncThunk('deleteProduct/deleteOneProduct', async (args: deleteProduct) => {
+export const deleteOneUser = createAsyncThunk('deleteUser/deleteOneUser', async (args: deleteUser) => {
    const instance = axios.create({
       // headers: {
       //    Authorization: 'Bearer ' + args.token,
       // },
    });
-   const { data } = await instance.put(`http://localhost:3000/api/products/delete/${args.id}`);
+   const { data } = await instance.put(`http://localhost:3000/api/delivers/delete/${args.id}`);
    return data;
 });
 
-interface IOneProduct {
+interface IOneUser {
    productTitle: { _id: string; name: string } | null;
    deleteStatus: 'loading' | 'success' | 'error';
 }
 
-const initialState: IOneProduct = {
+const initialState: IOneUser = {
    productTitle: null,
    deleteStatus: 'loading', // loading | success | error
 };
 
-export const deleteProductSlice = createSlice({
-   name: 'deleteProduct',
+export const deleteUserSlice = createSlice({
+   name: 'deleteUser',
    initialState,
    reducers: {
       updateDeleteStatus: (state, action: PayloadAction<'loading' | 'success' | 'error'>) => {
@@ -36,15 +36,15 @@ export const deleteProductSlice = createSlice({
       },
    },
    extraReducers: (builder) => {
-      builder.addCase(deleteOneProduct.pending, (state) => {
+      builder.addCase(deleteOneUser.pending, (state) => {
          state.deleteStatus = 'loading';
          state.productTitle = null;
       });
-      builder.addCase(deleteOneProduct.fulfilled, (state, action) => {
+      builder.addCase(deleteOneUser.fulfilled, (state, action) => {
          state.deleteStatus = 'success';
          state.productTitle = action.payload;
       });
-      builder.addCase(deleteOneProduct.rejected, (state) => {
+      builder.addCase(deleteOneUser.rejected, (state) => {
          state.deleteStatus = 'error';
          state.productTitle = null;
       });
@@ -52,9 +52,9 @@ export const deleteProductSlice = createSlice({
 });
 
 //Alternative to useSelector
-export const deleteStatus = (state: RootState) => state.deleteProduct.deleteStatus;
-export const productTitle = (state: RootState) => state.deleteProduct.productTitle;
+export const deleteStatus = (state: RootState) => state.deleteUser.deleteStatus;
+export const productTitle = (state: RootState) => state.deleteUser.productTitle;
 
-export const { updateDeleteStatus } = deleteProductSlice.actions;
+export const { updateDeleteStatus } = deleteUserSlice.actions;
 
-export default deleteProductSlice.reducer;
+export default deleteUserSlice.reducer;

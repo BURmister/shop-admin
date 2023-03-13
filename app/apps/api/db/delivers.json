@@ -10,23 +10,15 @@
   "ending": "наверно скоро",
   "products": [
     {
-      "key": "22",
+      "key": "33",
       "name": "футболка оверсайз",
       "price": "100500",
       "description": "просто футболочка оверсайз",
-      "gender": "мужской",
+      "gender": "Женский",
       "category": "футболки",
       "producer": "pull&bear",
-      "sizes": [
-        {
-          "size": "S",
-          "amount": 7
-        },
-        {
-          "size": "M",
-          "amount": 4
-        }
-      ],
+      "size": "S",
+      "amount": 3,
       "img": "string"
     }
   ],

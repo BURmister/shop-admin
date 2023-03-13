@@ -31,7 +31,7 @@
       img {
          position: absolute;
          width: 250px;
-         opacity: 0.1;
+         opacity: 0.05;
          transition: all 0.3s ease-in-out;
       }
 
@@ -71,6 +71,7 @@
       &:nth-child(2) {
          border: 2px solid rgba(84, 112, 140, 0.3);
          box-shadow: 0px 0px 1px 1px rgba(84, 112, 140, 0.7);
+         z-index: 2;
 
          img {
             top: 90px;
@@ -117,6 +118,7 @@
                top: 0px;
                opacity: 0.7;
                scale: 1.1;
+               z-index: 1;
             }
 
             span {
