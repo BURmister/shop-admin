@@ -5,7 +5,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
-import { Types } from 'mongoose';
+import { Types, isValidObjectId } from 'mongoose';
 import * as argon from 'argon2';
 
 import { UserModel } from './user.model';
@@ -17,9 +17,34 @@ export class UserService {
     @InjectModel(UserModel) private readonly UserModel: ModelType<UserModel>,
   ) {}
 
-  async getAll() {
-    const users = await this.UserModel.find().exec();
-    return users;
+  async getAll(searchTerm?: string | Types.ObjectId) {
+    if (searchTerm) {
+      if (isValidObjectId(searchTerm)) {
+        return this.UserModel.find({
+          $or: [
+            {
+              _id: searchTerm,
+            },
+          ],
+        }).exec();
+      } else {
+        return this.UserModel.find({
+          $or: [
+            {
+              firstName: new RegExp(String(searchTerm), 'i'),
+            },
+            {
+              secondName: new RegExp(String(searchTerm), 'i'),
+            },
+            {
+              role: new RegExp(String(searchTerm), 'i'),
+            },
+          ],
+        }).exec();
+      }
+    }
+    const user = await this.UserModel.find().exec();
+    return user;
   }
 
   async byId(_id: Types.ObjectId) {

@@ -5,7 +5,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
-import { Types } from 'mongoose';
+import { isValidObjectId, Types } from 'mongoose';
 import * as argon from 'argon2';
 
 import { ProductsModel } from './products.model';
@@ -18,10 +18,34 @@ export class ProductsService {
     private readonly ProductsModel: ModelType<ProductsModel>,
   ) {}
 
-  async getAll() {
-    const products = await this.ProductsModel.find().exec();
-
-    return products;
+  async getAll(searchTerm?: string | Types.ObjectId) {
+    if (searchTerm) {
+      if (isValidObjectId(searchTerm)) {
+        return this.ProductsModel.find({
+          $or: [
+            {
+              _id: searchTerm,
+            },
+          ],
+        }).exec();
+      } else {
+        return this.ProductsModel.find({
+          $or: [
+            {
+              name: new RegExp(String(searchTerm), 'i'),
+            },
+            {
+              category: new RegExp(String(searchTerm), 'i'),
+            },
+            {
+              producer: new RegExp(String(searchTerm), 'i'),
+            },
+          ],
+        }).exec();
+      }
+    }
+    const product = await this.ProductsModel.find().exec();
+    return product;
   }
 
   async getById(_id: Types.ObjectId) {
@@ -94,13 +118,13 @@ export class ProductsService {
     const product = await this.getById(_id);
     product.amount = product.amount - 1;
     await product.save();
-    return product.name;
+    return { _id: product._id, name: product.name };
   }
 
   async plus(_id: Types.ObjectId) {
     const product = await this.getById(_id);
     product.amount = product.amount + 1;
     await product.save();
-    return product.name;
+    return { _id: product._id, name: product.name };
   }
 }

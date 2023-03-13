@@ -8,6 +8,6 @@ export type product = {
    category: string;
    producer: string;
    size: string;
-   amount: string;
+   amount: number;
    img: string;
 };

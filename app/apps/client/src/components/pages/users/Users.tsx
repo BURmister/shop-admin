@@ -1,5 +1,6 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import debounce from 'lodash.debounce';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { fetchUsers, filterUsers, getUsers } from '../../../redux/slices/users/users.slice';
@@ -13,14 +14,18 @@ import deleteIcon from '../../../assets/delete.svg';
 
 const Users: FC = () => {
    const users = useAppSelector(getUsers);
-   const statusDelete = useAppSelector(deleteStatus)
+   const statusDelete = useAppSelector(deleteStatus);
    const dispatch = useAppDispatch();
+
+   const [searchTerm, setSearchTerm] = useState<string>('');
+   const [localSearch, setLocalSearch] = useState<string>('');
+   const ref = useRef<HTMLInputElement>(null);
 
    useEffect(() => {
       window.scrollTo(0, 0);
       document.title = 'Сотрудники';
-      dispatch(fetchUsers());
-   }, []);
+      searchTerm !== '' ? dispatch(fetchUsers(searchTerm)) : dispatch(fetchUsers());
+   }, [searchTerm]);
 
    const onDelete = (_id: string) => {
       if (confirm('Вы уверены, что хотите удалить сотрудника?')) {
@@ -32,6 +37,24 @@ const Users: FC = () => {
             alert('Ошибка удаления сотрудника');
          }
       }
+   };
+
+   const enterClick = (event: any) => {
+      if (event.key === 'Enter') {
+         event.preventDefault();
+      }
+   };
+
+   const updateSearchInput = useCallback(
+      debounce((string: string) => {
+         setSearchTerm(string);
+      }, 2000),
+      [],
+   );
+
+   const onSearchInput = (event: { target: HTMLInputElement }) => {
+      setLocalSearch(event.target.value);
+      updateSearchInput(event.target.value);
    };
 
    if (users.length === 0) {
@@ -49,7 +72,7 @@ const Users: FC = () => {
                   </Link>
                </nav>
                <div className={styles.table}></div>
-               <h1>нет ожидаемых доставок</h1>
+               <h1>сотрудники в журнале отсутствуют</h1>
             </div>
          </div>
       );
@@ -70,9 +93,20 @@ const Users: FC = () => {
             </nav>
             <div className={styles.table}>
                <form className={styles.table__row}>
-                  <input type="search" placeholder="Поиск сотрудника по   коду /  имени" />
-                  <button type="button">Поиск</button>
+                  <input
+                     ref={ref}
+                     type="search"
+                     placeholder="Поиск сотрудника по   коду / имени / должности"
+                     onKeyDown={(event) => enterClick(event)}
+                     value={localSearch}
+                     onChange={(event: { target: HTMLInputElement }) => onSearchInput(event)}
+                  />
+                  {/* <button type="button" onClick={() => buttonClick()}>
+                  Поиск
+               </button> */}
                </form>
+               <span className={styles.searchTerm}>{searchTerm !== '' && <h2>Результаты по запросу "{searchTerm}"</h2>}</span>
+
                {users.map((item, index) => (
                   <div className={styles.table__row} key={index}>
                      <span>

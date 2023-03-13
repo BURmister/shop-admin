@@ -11,6 +11,7 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { GetUser, GetAdmin } from '../auth/decorator/user.decorator';
@@ -24,8 +25,8 @@ export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
   @Get('/all')
-  getAll() {
-    return this.productsService.getAll();
+  getAll(@Query('searchTerm') searchTerm?: string | Types.ObjectId) {
+    return this.productsService.getAll(searchTerm);
   }
 
   @Get(':_id')

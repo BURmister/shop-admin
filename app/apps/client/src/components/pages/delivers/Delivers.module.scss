@@ -16,6 +16,12 @@
       grid-template-columns: 1fr;
       row-gap: 10px;
 
+      .searchTerm {
+         padding: 20px 0 50px 0;
+         text-align: center;
+         color: rgb(57, 86, 115);
+      }
+
       .table__row {
          padding-left: 10px;
          min-height: 60px;
@@ -37,7 +43,6 @@
             justify-items: center;
 
             text-align: center;
-
 
             h3 {
                font-size: 12px;

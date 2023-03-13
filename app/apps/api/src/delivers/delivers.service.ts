@@ -5,7 +5,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
 import { ModelType } from '@typegoose/typegoose/lib/types';
-import { Types } from 'mongoose';
+import { Types, isValidObjectId } from 'mongoose';
 import * as argon from 'argon2';
 
 import { DeliversModel } from './delivers.model';
@@ -17,13 +17,35 @@ export class DeliversService {
   constructor(
     @InjectModel(DeliversModel)
     private readonly DeliversModel: ModelType<DeliversModel>,
-    @InjectModel(ProductsModel) private readonly ProductsModel: ModelType<ProductsModel>,
+    @InjectModel(ProductsModel)
+    private readonly ProductsModel: ModelType<ProductsModel>,
   ) {}
 
-  async getAll() {
-    const delivers = await this.DeliversModel.find().exec();
-
-    return delivers;
+  async getAll(searchTerm?: string | Types.ObjectId) {
+    if (searchTerm) {
+      if (isValidObjectId(searchTerm)) {
+        return this.DeliversModel.find({
+          $or: [
+            {
+              _id: searchTerm,
+            },
+          ],
+        }).exec();
+      } else {
+        return this.DeliversModel.find({
+          $or: [
+            {
+              deliveryName: new RegExp(String(searchTerm), 'i'),
+            },
+            {
+              from: new RegExp(String(searchTerm), 'i'),
+            },
+          ],
+        }).exec();
+      }
+    }
+    const delivery = await this.DeliversModel.find().exec();
+    return delivery;
   }
 
   async getById(_id: Types.ObjectId) {
@@ -59,7 +81,7 @@ export class DeliversService {
     }
 
     if (dto.products) {
-      deliver.products = dto.products
+      deliver.products = dto.products;
     }
 
     await deliver.save();

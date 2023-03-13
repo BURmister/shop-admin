@@ -11,6 +11,7 @@ import {
   UsePipes,
   ValidationPipe,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { GetUser, GetAdmin } from '../auth/decorator/user.decorator';
@@ -24,8 +25,8 @@ export class DeliversController {
   constructor(private deliversService: DeliversService) {}
 
   @Get('/all')
-  getAll() {
-    return this.deliversService.getAll();
+  getAll(@Query('searchTerm') searchTerm?: string | Types.ObjectId) {
+    return this.deliversService.getAll(searchTerm);
   }
 
   @Get(':_id')
@@ -34,26 +35,23 @@ export class DeliversController {
   }
 
   @Post('/add')
-  addOne( @Body() dto: DeliversDto) {
+  addOne(@Body() dto: DeliversDto) {
     return this.deliversService.addOne(dto);
   }
 
   @Put('/edit/:_id')
   @HttpCode(200)
-  edit(  
-    @Param('_id') _id: Types.ObjectId,
-    @Body() dto: DeliversDto,
-  ) {
+  edit(@Param('_id') _id: Types.ObjectId, @Body() dto: DeliversDto) {
     return this.deliversService.editOne(_id, dto);
   }
 
   @Put('/delete/:_id')
-  delete( @Param('_id') _id: Types.ObjectId) {
+  delete(@Param('_id') _id: Types.ObjectId) {
     return this.deliversService.deleteOne(_id);
   }
 
-  @Put('/complete/:_id')   
-  complete( @Param('_id') _id: Types.ObjectId) {
+  @Put('/complete/:_id')
+  complete(@Param('_id') _id: Types.ObjectId) {
     return this.deliversService.completeOne(_id);
   }
 }

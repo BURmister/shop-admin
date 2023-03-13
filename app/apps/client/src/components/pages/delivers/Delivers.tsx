@@ -1,5 +1,6 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import debounce from 'lodash.debounce';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { fetchDelivers, filterDelivers, getDelivers } from '../../../redux/slices/delivers/delivers.slice';
@@ -19,11 +20,15 @@ const Delivers: FC = () => {
    const statusComplete = useAppSelector(completeStatus);
    const dispatch = useAppDispatch();
 
+   const [searchTerm, setSearchTerm] = useState<string>('');
+   const [localSearch, setLocalSearch] = useState<string>('');
+   const ref = useRef<HTMLInputElement>(null);
+
    useEffect(() => {
       window.scrollTo(0, 0);
       document.title = 'Доставки';
-      dispatch(fetchDelivers());
-   }, []);
+      searchTerm !== '' ? dispatch(fetchDelivers(searchTerm)) : dispatch(fetchDelivers());
+   }, [searchTerm]);
 
    const onDelete = (_id: string) => {
       if (confirm('Вы уверены, что хотите удалить доставку?')) {
@@ -47,6 +52,24 @@ const Delivers: FC = () => {
             alert('Ошибка завершения доставки');
          }
       }
+   };
+
+   const enterClick = (event: any) => {
+      if (event.key === 'Enter') {
+         event.preventDefault();
+      }
+   };
+
+   const updateSearchInput = useCallback(
+      debounce((string: string) => {
+         setSearchTerm(string);
+      }, 2000),
+      [],
+   );
+
+   const onSearchInput = (event: { target: HTMLInputElement }) => {
+      setLocalSearch(event.target.value);
+      updateSearchInput(event.target.value);
    };
 
    if (delivers.length === 0) {
@@ -85,9 +108,20 @@ const Delivers: FC = () => {
             </nav>
             <div className={styles.table}>
                <form className={styles.table__row}>
-                  <input type="search" placeholder="Поиск сотрудника по   коду / названию" />
-                  <button type="button">Поиск</button>
+                  <input
+                     ref={ref}
+                     type="search"
+                     placeholder="Поиск доставки по   коду / названию / месту отправления"
+                     onKeyDown={(event) => enterClick(event)}
+                     value={localSearch}
+                     onChange={(event: { target: HTMLInputElement }) => onSearchInput(event)}
+                  />
+                  {/* <button type="button" onClick={() => buttonClick()}>
+                  Поиск
+               </button> */}
                </form>
+               <span className={styles.searchTerm}>{searchTerm !== '' && <h2>Результаты по запросу "{searchTerm}"</h2>}</span>
+
                {delivers.map((item, index) => (
                   <div className={styles.table__row} key={index}>
                      <span>

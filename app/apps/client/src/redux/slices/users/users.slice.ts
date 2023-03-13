@@ -3,8 +3,8 @@ import axios from 'axios';
 import { RootState } from '../../store';
 import { user } from '../../types/users.types';
 
-export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
-   const { data } = await axios.get(`http://localhost:3000/api/users/all`);
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async (searchTerm?: string) => {
+   const { data } = await axios.get(`http://localhost:3000/api/users/all${searchTerm ? `?searchTerm=${searchTerm}` : ''}`);
    return data;
 });
 

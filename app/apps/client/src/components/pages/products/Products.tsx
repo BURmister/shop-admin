@@ -1,9 +1,11 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import debounce from 'lodash.debounce';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { fetchProducts, filterProducts, getProducts } from '../../../redux/slices/products/products.slice';
 import { deleteOneProduct, deleteStatus } from '../../../redux/slices/products/deleteProduct.slice';
+import { amountProduct, amountStatus, productTitle } from '../../../redux/slices/products/amountProduct.slice';
 
 import styles from './Products.module.scss';
 import back from '../../../assets/back.svg';
@@ -15,13 +17,19 @@ import minus from '../../../assets/minus.svg';
 const Products: FC = () => {
    const products = useAppSelector(getProducts);
    const statusDelete = useAppSelector(deleteStatus);
+   const statusAmount = useAppSelector(amountStatus);
+   const amountedProduct = useAppSelector(productTitle);
    const dispatch = useAppDispatch();
+
+   const [searchTerm, setSearchTerm] = useState<string>('');
+   const [localSearch, setLocalSearch] = useState<string>('');
+   const ref = useRef<HTMLInputElement>(null);
 
    useEffect(() => {
       window.scrollTo(0, 0);
       document.title = 'Товары';
-      dispatch(fetchProducts());
-   }, []);
+      searchTerm !== '' ? dispatch(fetchProducts(searchTerm)) : dispatch(fetchProducts());
+   }, [searchTerm]);
 
    const onDelete = (_id: string) => {
       if (confirm('Вы уверены, что хотите удалить товар?')) {
@@ -32,6 +40,37 @@ const Products: FC = () => {
          } else if (statusDelete === 'error') {
             alert('Ошибка удаления товара');
          }
+      }
+   };
+
+   const enterClick = (event: any) => {
+      if (event.key === 'Enter') {
+         event.preventDefault();
+      }
+   };
+
+   const updateSearchInput = useCallback(
+      debounce((string: string) => {
+         setSearchTerm(string);
+      }, 2000),
+      [],
+   );
+
+   const onSearchInput = (event: { target: HTMLInputElement }) => {
+      setLocalSearch(event.target.value);
+      updateSearchInput(event.target.value);
+   };
+
+   const changeAmount = (_id: string, state: 'plus' | 'minus') => {
+      await dispatch(amountProduct({ _id, state })) && alert({statusAmount === 'success' ? 'awd': 'awd'})
+      if (statusAmount === 'success') {
+         if (state === 'plus') {
+            alert(`Прибавили единицу товара ${amountedProduct !== null && amountedProduct._id}`);
+         } else {
+            alert(`Удалили единицу товара ${amountedProduct !== null && amountedProduct._id}`);
+         }
+      } else if (statusAmount === 'error') {
+         alert('Что-то пошло не так. Попробуйте позже')
       }
    };
 
@@ -70,9 +109,19 @@ const Products: FC = () => {
          </nav>
          <div className={styles.table}>
             <form className={styles.table__row}>
-               <input type="search" placeholder="Поиск товара по   артиклу / названию" />
-               <button type="button">Поиск</button>
+               <input
+                  ref={ref}
+                  type="search"
+                  placeholder="Поиск товара по   артиклу / названию / производителю / категории"
+                  onKeyDown={(event) => enterClick(event)}
+                  value={localSearch}
+                  onChange={(event: { target: HTMLInputElement }) => onSearchInput(event)}
+               />
+               {/* <button type="button" onClick={() => buttonClick()}>
+                  Поиск
+               </button> */}
             </form>
+            <span className={styles.searchTerm}>{searchTerm !== '' && <h2>Результаты по запросу "{searchTerm}"</h2>}</span>
             {products.map((item, index) => (
                <div className={styles.table__row} key={index}>
                   <span>
@@ -104,10 +153,10 @@ const Products: FC = () => {
                      {item.price} ₽
                   </span>
                   <span>
-                     <button className={styles.plus} type="button" title="+1 данный товар">
+                     <button className={styles.plus} type="button" title="+1 данный товар" onClick={() => changeAmount(item._id, 'plus')}>
                         <img src={deleteIcon} />
                      </button>
-                     <button className={styles.minus} type="button" title="-1 данный товар">
+                     <button className={styles.minus} type="button" title="-1 данный товар" onClick={() => changeAmount(item._id, 'minus')}>
                         <img src={minus} />
                      </button>
                      <Link className={styles.edit} to={`/products/edit/${item._id}`} title="изменить товар">

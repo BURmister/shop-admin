@@ -18,7 +18,7 @@ const Footer: FC = () => {
                   <a href="#" target="_blank">Помощь</a>
                </li>
                <li>
-                  <a href="#" target="_blank">API</a>
+                  <a href="#" target="_blank">Поддeржка</a>
                </li>
             </ul>
          </div>
