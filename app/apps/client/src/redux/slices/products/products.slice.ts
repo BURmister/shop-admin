@@ -3,8 +3,18 @@ import axios from 'axios';
 import { RootState } from '../../store';
 import { product } from '../../types/product.types';
 
-export const fetchProducts = createAsyncThunk('products/fetchProducts', async (searchTerm?: string) => {
-   const { data } = await axios.get(`http://localhost:3000/api/products/all${searchTerm ? `?searchTerm=${searchTerm}` : ''}`);
+type args = {
+   searchTerm?: string;
+   token: string;
+};
+
+export const fetchProducts = createAsyncThunk('products/fetchProducts', async (args: args) => {
+   const instance = axios.create({
+      headers: {
+         Authorization: 'Bearer ' + args.token,
+      },
+   });
+   const { data } = await instance.get(`/api/products/all${args.searchTerm ? `?searchTerm=${args.searchTerm}` : ''}`);
    return data;
 });
 
@@ -35,6 +45,19 @@ export const productsSlice = createSlice({
       //       state.products = state.products.map((item) => (item._id !== product._id ? item : product));
       //    }
       // },
+      changeAmount: (state, action: PayloadAction<{ _id: string; state: 'plus' | 'minus' }>) => {
+         const product = state.products.find((item) => (item._id = action.payload._id));
+         const string = action.payload.state;
+         if (product) {
+            if (string === 'plus') {
+               product.amount = product.amount + 1;
+            } else {
+               product.amount = product.amount - 1;
+            }
+            const index = state.products.findIndex((item) => item === product);
+            state.products[index] = product;
+         }
+      },
    },
    extraReducers: (builder) => {
       builder.addCase(fetchProducts.pending, (state) => {
@@ -58,5 +81,6 @@ export const productsStatus = (state: RootState) => state.products.status;
 
 export const { updateStatus } = productsSlice.actions;
 export const { filterProducts } = productsSlice.actions;
+export const { changeAmount } = productsSlice.actions;
 
 export default productsSlice.reducer;

@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef, useCallback } from 'react';
+import { FC, useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 
@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { fetchDelivers, filterDelivers, getDelivers } from '../../../redux/slices/delivers/delivers.slice';
 import { deleteOneDelivery, deleteStatus } from '../../../redux/slices/delivers/deleteDelivery.slice';
 import { completeOneDelivery, completeStatus } from '../../../redux/slices/delivers/completeDelivery.slice';
+import AppContext from '../../../hooks/Context';
 
 import styles from './Delivers.module.scss';
 import back from '../../../assets/back.svg';
@@ -20,6 +21,8 @@ const Delivers: FC = () => {
    const statusComplete = useAppSelector(completeStatus);
    const dispatch = useAppDispatch();
 
+   const { token } = useContext(AppContext)
+
    const [searchTerm, setSearchTerm] = useState<string>('');
    const [localSearch, setLocalSearch] = useState<string>('');
    const ref = useRef<HTMLInputElement>(null);
@@ -27,12 +30,12 @@ const Delivers: FC = () => {
    useEffect(() => {
       window.scrollTo(0, 0);
       document.title = 'Доставки';
-      searchTerm !== '' ? dispatch(fetchDelivers(searchTerm)) : dispatch(fetchDelivers());
+      searchTerm !== '' ? dispatch(fetchDelivers({searchTerm, token})) : dispatch(fetchDelivers({token}));
    }, [searchTerm]);
 
    const onDelete = (_id: string) => {
       if (confirm('Вы уверены, что хотите удалить доставку?')) {
-         dispatch(deleteOneDelivery({ id: _id, token: '' }));
+         dispatch(deleteOneDelivery({ id: _id, token }));
          dispatch(filterDelivers(_id));
          if (statusDelete === 'success') {
             alert('Доставка успешно удалена');
@@ -44,7 +47,7 @@ const Delivers: FC = () => {
 
    const onComplete = (_id: string) => {
       if (confirm('Вы уверены, что хотите завершить доставку?')) {
-         dispatch(completeOneDelivery({ id: _id, token: '' }));
+         dispatch(completeOneDelivery({ id: _id, token }));
          dispatch(filterDelivers(_id));
          if (statusComplete === 'success') {
             alert('Доставка успешно принята');
@@ -138,7 +141,7 @@ const Delivers: FC = () => {
                      </span>
                      <span>
                         <h3>начало</h3>
-                        {item.begging}
+                        {item.beggining}
                      </span>
                      <span>
                         <Link className={styles.edit} to={`/delivers/edit/${item._id}`} title="изменить доставку">

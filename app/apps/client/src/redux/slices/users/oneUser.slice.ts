@@ -3,8 +3,13 @@ import axios from 'axios';
 import { RootState } from '../../store';
 import { user } from '../../types/users.types';
 
-export const fetchOneUser = createAsyncThunk('oneUser/fetchOneUser', async (id: string) => {
-   const { data } = await axios.get(`http://localhost:3000/api/users/${id}`);
+type args = {
+   id: string;
+   token: string;
+};
+
+export const fetchOneUser = createAsyncThunk('oneUser/fetchOneUser', async (args: args) => {
+   const { data } = await axios.get(`/api/users/${args.id}`, { headers: { Authorization: 'Bearer ' + args.token } });
    return data;
 });
 

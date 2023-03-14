@@ -17,7 +17,7 @@ export class DeliversModel extends TimeStamps {
   from: string;
 
   @prop()
-  begging: string;
+  beggining: string;
 
   @prop()
   ending: string;

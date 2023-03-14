@@ -19,7 +19,7 @@ export class DeliversDto {
 
   @IsString()
   @IsOptional()
-  begging: string;
+  beggining: string;
 
   @IsString()
   @IsOptional()

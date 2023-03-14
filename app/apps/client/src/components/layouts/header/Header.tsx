@@ -1,6 +1,9 @@
 import { FC } from 'react';
 import { useLocate } from '../../../hooks/useLocate';
 
+import { useAppDispatch } from '../../../hooks/useRedux';
+import { logout } from '../../../redux/slices/auth/auth.slice';
+
 import styles from './Header.module.scss';
 
 const pages = [
@@ -16,9 +19,12 @@ const pages = [
    { id: '/products/edit', value: 'Измените товар' },
 ];
 
-const Header: FC = () => {
+const Header: FC<{isLogin: boolean}> = ({isLogin}) => {
    const locate = useLocate();
+   const dispatch = useAppDispatch()
+
    let found = pages.find((item) => item.id.toLowerCase() === locate.pathname.toLowerCase());
+
    if (locate.pathname.includes('/users/edit')) {
       found = { id: '/users/edit', value: 'Измените сотрудника' };
    }
@@ -35,7 +41,7 @@ const Header: FC = () => {
       <header>
          <div className={styles.wrapper}>
             <h2>{found ? found.value : 'Страница не существует'}</h2>
-            <button type="button">Bыйти</button>
+            { isLogin && <button type="button" onClick={() => dispatch(logout())}>Bыйти</button>}
          </div>
       </header>
    );

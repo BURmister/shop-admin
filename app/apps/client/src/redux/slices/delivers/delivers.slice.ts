@@ -3,8 +3,15 @@ import axios from 'axios';
 import { RootState } from '../../store';
 import { delivery } from '../../types/delivers.types';
 
-export const fetchDelivers = createAsyncThunk('delivers/fetchDelivers', async (searchTerm?: string) => {
-   const { data } = await axios.get(`http://localhost:3000/api/delivers/all${searchTerm ? `?searchTerm=${searchTerm}` : ''}`);
+type args = {
+   searchTerm?: string;
+   token: string;
+};
+
+export const fetchDelivers = createAsyncThunk('delivers/fetchDelivers', async (args: args) => {
+   const { data } = await axios.get(`/api/delivers/all${args.searchTerm ? `?searchTerm=${args.searchTerm}` : ''}`, {
+      headers: { Authorization: 'Bearer ' + args.token },
+   });
    return data;
 });
 

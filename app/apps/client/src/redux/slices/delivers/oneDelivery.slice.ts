@@ -3,8 +3,13 @@ import axios from 'axios';
 import { RootState } from '../../store';
 import { delivery } from '../../types/delivers.types';
 
-export const fetchOneDelivery = createAsyncThunk('oneDelivery/fetchOneDelivery', async (id: string) => {
-   const { data } = await axios.get(`http://localhost:3000/api/delivers/${id}`);
+type args = {
+   id: string;
+   token: string;
+};
+
+export const fetchOneDelivery = createAsyncThunk('oneDelivery/fetchOneDelivery', async (args: args) => {
+   const { data } = await axios.get(`/api/delivers/${args.id}`, { headers: { Authorization: 'Bearer ' + args.token } });
    return data;
 });
 

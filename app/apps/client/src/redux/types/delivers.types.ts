@@ -6,7 +6,7 @@ export type delivery = {
    deliveryName: string;
    deliveryDescription?: string;
    from: string;
-   begging: string;
+   beggining: string;
    ending: string;
    products: product[];
 };

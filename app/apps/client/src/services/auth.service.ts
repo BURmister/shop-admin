@@ -2,24 +2,24 @@ import { IAuthData, removeTokenStorage, saveTokenStorage, saveToStorage } from '
 import { axiosClassic } from '../api/interceptors';
 
 export const AuthService = {
-   async login(email: string, password: string) {
+   async login(name: string, password: string) {
       const response = await axiosClassic.post<IAuthData>('/auth/login', {
-         email,
+         name,
          password,
       });
 
-      if (response.data.accessToken) saveTokenStorage(response.data);
+      if (response.data.access_token) saveTokenStorage(response.data);
 
       return response.data;
    },
 
-   async register(email: string, password: string) {
+   async register(name: string, password: string) {
       const response = await axiosClassic.post<IAuthData>('/auth/register', {
-         email,
+         name,
          password,
       });
 
-      if (response.data.accessToken) saveTokenStorage(response.data);
+      if (response.data.access_token) saveTokenStorage(response.data);
 
       return response.data;
    },

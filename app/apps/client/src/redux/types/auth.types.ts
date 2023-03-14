@@ -9,6 +9,6 @@ export interface IAuth {
 }
 
 export interface IAuthResponse {
-   user: {_id: string, name: string} | null
-   accessToken: string
+   user: { _id: string; name: string } | null;
+   access_token: string;
 }

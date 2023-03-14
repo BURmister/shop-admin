@@ -6,11 +6,11 @@ export const getContentType = () => ({
 })
 
 export const axiosClassic = axios.create({
-   baseURL: urlAPI,
+   baseURL: "/api",
    headers: getContentType(),
 });
 
 const instance = axios.create({
-   baseURL: urlAPI,
+   baseURL: '/api',
    headers: getContentType(),
 });

@@ -1,10 +1,11 @@
-import { FC, useState, useEffect, useRef, useCallback } from 'react';
+import { FC, useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { fetchUsers, filterUsers, getUsers } from '../../../redux/slices/users/users.slice';
 import { deleteOneUser, deleteStatus } from '../../../redux/slices/users/deleteUser.slice';
+import AppContext from '../../../hooks/Context';
 
 import styles from './Users.module.scss';
 import back from '../../../assets/back.svg';
@@ -21,15 +22,17 @@ const Users: FC = () => {
    const [localSearch, setLocalSearch] = useState<string>('');
    const ref = useRef<HTMLInputElement>(null);
 
+   const { token } = useContext(AppContext);
+
    useEffect(() => {
       window.scrollTo(0, 0);
       document.title = 'Сотрудники';
-      searchTerm !== '' ? dispatch(fetchUsers(searchTerm)) : dispatch(fetchUsers());
+      searchTerm !== '' ? dispatch(fetchUsers({searchTerm, token})) : dispatch(fetchUsers({token}));
    }, [searchTerm]);
 
    const onDelete = (_id: string) => {
       if (confirm('Вы уверены, что хотите удалить сотрудника?')) {
-         dispatch(deleteOneUser({ id: _id, token: '' }));
+         dispatch(deleteOneUser({ id: _id, token }));
          dispatch(filterUsers(_id));
          if (statusDelete === 'success') {
             alert('Сотрудник успешно удален');

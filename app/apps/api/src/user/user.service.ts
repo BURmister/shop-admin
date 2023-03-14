@@ -1,6 +1,8 @@
 import {
   UnauthorizedException,
   NotFoundException,
+  ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common/exceptions';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from 'nestjs-typegoose';
@@ -56,20 +58,9 @@ export class UserService {
 
   async updateProfile(_id: Types.ObjectId, dto: UserDto) {
     const user = await this.byId(_id);
-    const isSameUser = await this.UserModel.findOne({
-      email: dto.name,
-    });
-
-    if (isSameUser && String(_id) !== String(isSameUser._id))
-      throw new NotFoundException('email is busy');
 
     if (dto.role) {
       user.role = dto.role;
-    }
-
-    if (dto.password) {
-      const hash = await argon.hash(dto.password);
-      user.hash = hash;
     }
 
     if (dto.firstName) {
@@ -80,11 +71,7 @@ export class UserService {
       user.secondName = dto.secondName;
     }
 
-    if (dto.description) {
-      user.description = dto.description;
-    }
-
     await user.save();
-    return 'user has been changed';
+    return user._id;
   }
 }

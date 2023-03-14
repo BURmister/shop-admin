@@ -1,11 +1,13 @@
-import { FC, useState, useEffect, useRef, useCallback } from 'react';
+import { FC, useState, useEffect, useRef, useCallback, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import debounce from 'lodash.debounce';
 
 import { useAppDispatch, useAppSelector } from '../../../hooks/useRedux';
 import { fetchProducts, filterProducts, getProducts } from '../../../redux/slices/products/products.slice';
 import { deleteOneProduct, deleteStatus } from '../../../redux/slices/products/deleteProduct.slice';
-import { amountProduct, amountStatus, productTitle } from '../../../redux/slices/products/amountProduct.slice';
+import { amountProduct, amountStatus, productTitle, updateAmountStatus } from '../../../redux/slices/products/amountProduct.slice';
+import { changeAmount as changeProductAmount } from '../../../redux/slices/products/products.slice';
+import AppContext from '../../../hooks/Context';
 
 import styles from './Products.module.scss';
 import back from '../../../assets/back.svg';
@@ -25,15 +27,17 @@ const Products: FC = () => {
    const [localSearch, setLocalSearch] = useState<string>('');
    const ref = useRef<HTMLInputElement>(null);
 
+   const { token } = useContext(AppContext);
+
    useEffect(() => {
       window.scrollTo(0, 0);
       document.title = 'Товары';
-      searchTerm !== '' ? dispatch(fetchProducts(searchTerm)) : dispatch(fetchProducts());
+      searchTerm !== '' ? dispatch(fetchProducts({ searchTerm, token })) : dispatch(fetchProducts({ token }));
    }, [searchTerm]);
 
    const onDelete = (_id: string) => {
       if (confirm('Вы уверены, что хотите удалить товар?')) {
-         dispatch(deleteOneProduct({ id: _id, token: '' }));
+         dispatch(deleteOneProduct({ id: _id, token }));
          dispatch(filterProducts(_id));
          if (statusDelete === 'success') {
             alert('Товар успешно удален');
@@ -62,17 +66,19 @@ const Products: FC = () => {
    };
 
    const changeAmount = (_id: string, state: 'plus' | 'minus') => {
-      await dispatch(amountProduct({ _id, state })) && alert({statusAmount === 'success' ? 'awd': 'awd'})
-      if (statusAmount === 'success') {
-         if (state === 'plus') {
-            alert(`Прибавили единицу товара ${amountedProduct !== null && amountedProduct._id}`);
-         } else {
-            alert(`Удалили единицу товара ${amountedProduct !== null && amountedProduct._id}`);
-         }
-      } else if (statusAmount === 'error') {
-         alert('Что-то пошло не так. Попробуйте позже')
-      }
+      dispatch(amountProduct({ _id, state, token }));
+      dispatch(changeProductAmount({ _id, state }));
    };
+
+   useEffect(() => {
+      if (statusAmount === 'success') {
+         alert('Операция выполнена успешно');
+         dispatch(updateAmountStatus('loading'));
+      } else if (statusAmount === 'error') {
+         alert('Что-то пошло не так. Попробуйте позже');
+         dispatch(updateAmountStatus('loading'));
+      }
+   }, [statusAmount]);
 
    if (products.length === 0) {
       return (

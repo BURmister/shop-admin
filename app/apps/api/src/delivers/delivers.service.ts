@@ -58,7 +58,7 @@ export class DeliversService {
   async addOne(dto: DeliversDto) {
     const newProduct = new this.DeliversModel(dto);
     const deliver = await newProduct.save();
-    return deliver.deliveryName;
+    return deliver._id;
   }
 
   async editOne(_id: Types.ObjectId, dto: DeliversDto) {
@@ -85,13 +85,13 @@ export class DeliversService {
     }
 
     await deliver.save();
-    return deliver.deliveryName;
+    return deliver._id;
   }
 
   async deleteOne(_id: Types.ObjectId) {
     const deliver = await this.getById(_id);
     await deliver.deleteOne();
-    return deliver.deliveryName;
+    return deliver._id;
   }
 
   async completeOne(_id: Types.ObjectId) {

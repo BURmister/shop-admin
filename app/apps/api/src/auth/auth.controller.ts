@@ -9,10 +9,9 @@ export class AuthController {
 
    @Post('register')
    register(
-      @GetAdmin() state: boolean,
       @Body() dto: AuthDto
       ) {
-      return state && this.authService.register(dto);
+      return this.authService.register(dto);
    }
 
    @HttpCode(HttpStatus.OK)

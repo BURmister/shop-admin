@@ -9,11 +9,11 @@ type deleteDelivery = {
 
 export const deleteOneDelivery = createAsyncThunk('deleteDelivery/deleteOneDelivery', async (args: deleteDelivery) => {
    const instance = axios.create({
-      // headers: {
-      //    Authorization: 'Bearer ' + args.token,
-      // },
+      headers: {
+         Authorization: 'Bearer ' + args.token,
+      },
    });
-   const { data } = await instance.put(`http://localhost:3000/api/delivers/delete/${args.id}`);
+   const { data } = await instance.put(`/api/delivers/delete/${args.id}`);
    return data;
 });
 

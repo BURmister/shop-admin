@@ -58,7 +58,7 @@ export class ProductsService {
   async addOne(dto: ProductsDto) {
     const newProduct = new this.ProductsModel(dto);
     const product = await newProduct.save();
-    return product.name;
+    return product._id;
   }
 
   async editOne(_id: Types.ObjectId, dto: ProductsDto) {
@@ -105,7 +105,7 @@ export class ProductsService {
     }
 
     await product.save();
-    return product.name;
+    return product._id;
   }
 
   async deleteOne(_id: Types.ObjectId) {

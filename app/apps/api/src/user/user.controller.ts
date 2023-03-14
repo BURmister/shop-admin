@@ -1,17 +1,17 @@
 import {
-   Controller,
-   Get,
-   Put,
-   Post,
-   Body,
-   Patch,
-   Param,
-   Delete,
-   HttpCode,
-   UsePipes,
-   ValidationPipe,
-   UseGuards,
-   Query,
+  Controller,
+  Get,
+  Put,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+  UsePipes,
+  ValidationPipe,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { GetUser, GetAdmin } from '../auth/decorator/user.decorator';
@@ -19,7 +19,7 @@ import { Auth } from '../auth/guard/jwt.guard';
 import { UserDto } from './user.dto';
 import { UserService } from './user.service';
 
-// TODO @Auth()
+@Auth()
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
@@ -40,12 +40,8 @@ export class UserController {
   }
 
   @HttpCode(200)
-  @Put('/update')
-  async updateProfile(
-    @GetUser('_id') _id: Types.ObjectId,
-    @Body() dto: UserDto,
-  ) {
-    console.log(_id);
+  @Put('/update/:_id')
+  async updateProfile(@Param('_id') _id: Types.ObjectId, @Body() dto: UserDto) {
     return this.userService.updateProfile(_id, dto);
   }
 }

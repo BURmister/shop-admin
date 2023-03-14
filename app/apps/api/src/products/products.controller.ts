@@ -19,7 +19,7 @@ import { Auth } from '../auth/guard/jwt.guard';
 import { ProductsDto } from './products.dto';
 import { ProductsService } from './products.service';
 
-// TODO @Auth()
+@Auth()
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
